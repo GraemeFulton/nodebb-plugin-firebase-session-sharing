@@ -1,6 +1,6 @@
 {
 	"id": "nodebb-plugin-firebase-session-sharing",
-	"url": "https://github.com/VersutianFederation/nodebb-plugin-session-sharing",
+	"url": "https://github.com/VersutianFederation/nodebb-plugin-firebase-session-sharing",
 	"library": "./library.js",
 	"hooks": [
 		{ "hook": "filter:router.page", "method": "addMiddleware" },
