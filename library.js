@@ -17,6 +17,9 @@ var jwt = require('jsonwebtoken');
 var controllers = require('./lib/controllers');
 var nbbAuthController = module.parent.require('./controllers/authentication');
 
+var firebase = require('/opt/firebase/key.json');
+var pubs = require('/opt/firebase/public_keys.json');
+
 /* all the user profile fields that can be passed to user.updateProfile */
 var profileFields = [
 	'username',
@@ -133,12 +136,22 @@ plugin.getUser = function(remoteId, callback) {
 
 plugin.process = function(token, callback) {
 	async.waterfall([
-		async.apply(jwt.verify, token, plugin.settings.secret),
+                async.apply(plugin.verifyFromKeys, token),
 		async.apply(plugin.normalizePayload),
 		async.apply(plugin.findOrCreateUser),
 		async.apply(plugin.updateUserProfile),
 		async.apply(plugin.verifyUser)
 	], callback);
+};
+
+plugin.verifyFromKeys = function(token, callback) {
+       Object.values(pubs).forEach(function(key, index) {
+             var data = jwt.verify(token, key, function(err, payload) {
+                if (!err && pubs.length - 1 !== index) {
+                   callback(err, payload);
+                }
+             });
+       });
 };
 
 plugin.normalizePayload = function(payload, callback) {
@@ -455,11 +468,6 @@ plugin.reloadSettings = function(callback) {
 	meta.settings.get('session-sharing', function(err, settings) {
 		if (err) {
 			return callback(err);
-		}
-
-		if (!settings.hasOwnProperty('secret') || !settings.secret.length) {
-			winston.error('[session-sharing] JWT Secret not found, session sharing disabled.');
-			return callback();
 		}
 
 		// If "payload:parent" is found, but payloadParent is not, update the latter and delete the former
