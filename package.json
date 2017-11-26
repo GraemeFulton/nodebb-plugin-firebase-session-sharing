@@ -1,23 +1,23 @@
 {
-  "name": "nodebb-plugin-session-sharing",
+  "name": "nodebb-plugin-firebase-session-sharing",
   "version": "4.0.0",
-  "description": "Allows login sessions from your app to persist in NodeBB",
+  "description": "Allows login sessions from your Firebase custom auth to persist in NodeBB",
   "main": "library.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/julianlam/nodebb-plugin-session-sharing"
+    "url": "https://github.com/VersutianFederation/nodebb-plugin-firebase-session-sharing"
   },
   "keywords": [
     "nodebb",
     "plugin"
   ],
   "author": {
-    "name": "Julian Lam",
-    "email": "julian@nodebb.org"
+    "name": "mastercoms",
+    "email": "mastercoms@tutanota.de"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/julianlam/nodebb-plugin-session-sharing/issues"
+    "url": "https://github.com/VersutianFederation/nodebb-plugin-firebase-session-sharing/issues"
   },
   "readmeFilename": "README.md",
   "nbbpm": {
