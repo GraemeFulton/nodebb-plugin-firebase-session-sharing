@@ -1,8 +1,8 @@
 # Session Sharing for NodeBB
 
 In a nutshell, this plugin allows you to share sessions between your application and NodeBB. You'll need to set a
-special cookie with a common domain, containing a JSON Web Token with user data. If sufficient, this plugin will
-handle the rest (user registration/login).
+special cookie with a common domain, containing a JSON Web Token from Firebase Custom Auth with user data. 
+If sufficient, this plugin will handle the rest (user registration/login).
 
 ## How is this related to SSO?
 
@@ -25,7 +25,7 @@ yet, so you will need to be running the `master` branch of a NodeBB installation
 
 ## How does this work?
 
-This plugin checks incoming requests for a **shared cookie** that is saved by your application when a user
+This plugin checks incoming requests for a **shared cookie** that is saved by your Firebase application when a user
 logs in. This cookie contains in its value, a specially crafted signed token containing unique identifying
 information for that user.
 
@@ -45,49 +45,7 @@ forum is at `talk.example.com`, the cookie domain should be set to `example.com`
 
 ### Generating the JSON Web Token
 
-A list of compatible libraries can be obtained on the main website for [JSON Web Tokens](https://jwt.io/).
-
-You'll be encoding a payload that looks something like this...
-
-``` json
-{
-	"id": 123,
-	"username": "foobar"
-}
-```
-
-... into this JSON Web Token (using a secret of `secret`)...
-
-```
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzLCJ1c2VybmFtZSI6ImZvb2JhciJ9.b45U-9GfCZ203-pMAtIgTbTm0PfKRZwpI_cpugtDWVM
-```
-
-**Note**: Don't use `secret` as your secret!
-
-You are required to pass in at least `id` and `username`.
-
-You can also add `email`, `firstName`, `lastName`, `picture` to the payload if you'd like. If you specify
-`firstName` or `lastName`, `username` is no longer required. These values don't have to match exactly,
-you can customise the property names in the plugin settings.
-
-Encode the payload with a secret of your choice, and configure the plugin by specifying the secret, so
-it can properly decode and verify the JWT signature.
-
-**Note**: In some libraries, the payload is encoded like so:
-
-``` json
-{
-	"d": {
-		"email": "bob@example.com",
-		"uid": "123",
-		"username": "cheddar"
-	},
-	"exp": 1454710044,
-	"iat": 1452118044
-}
-```
-
-In which case, you can set the "Parent Key" setting in this plugin to `d`.
+https://firebase.google.com/docs/auth/admin/create-custom-tokens
 
 ## Security
 
@@ -99,14 +57,3 @@ tampered with. That is, NodeBB will only continue with a login if the signature 
 by the received payload and the secret.
 
 Use secure cookies transmitted via HTTPS if at all possible.
-
-## Testing
-
-If you need to generate a fake token for testing, you can `GET /debug/session` while NodeBB is in development
-mode. NodeBB will then log in or create a user called "testUser", with the email "testUser@example.org".
-
-**Warning**: If you've configured the plugin to "revalidate" instead of "trust" (normally the default), you
-might accidentally lock yourself out of the administrative account as you won't have a proper cookie to
-authenticate with. To reset the plugin settings, delete the "settings:session-sharing" hash/document in
-your data store. In a pinch, running `./nodebb reset -p nodebb-plugin-session-sharing` will work to disable
-the plugin so you can log back in.
