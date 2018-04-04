@@ -59,10 +59,10 @@ plugin.init = function(params, callback) {
 	var router = params.router,
 		hostMiddleware = params.middleware;
 
-	router.get('/admin/plugins/session-sharing', hostMiddleware.admin.buildHeader, controllers.renderAdminPage);
-	router.get('/api/admin/plugins/session-sharing', controllers.renderAdminPage);
+	router.get('/admin/plugins/firebase-session-sharing', hostMiddleware.admin.buildHeader, controllers.renderAdminPage);
+	router.get('/api/admin/plugins/firebase-session-sharing', controllers.renderAdminPage);
 
-	router.get('/api/session-sharing/lookup', controllers.retrieveUser);
+	router.get('/api/firebase-session-sharing/lookup', controllers.retrieveUser);
 
 	if (process.env.NODE_ENV === 'development') {
 		router.get('/debug/session', plugin.generate);
@@ -455,16 +455,16 @@ plugin.generate = function(req, res) {
 
 plugin.addAdminNavigation = function(header, callback) {
 	header.plugins.push({
-		route: '/plugins/session-sharing',
+		route: '/plugins/firebase-session-sharing',
 		icon: 'fa-user-secret',
-		name: 'Session Sharing'
+		name: 'Firebase Session Sharing'
 	});
 
 	callback(null, header);
 };
 
 plugin.reloadSettings = function(callback) {
-	meta.settings.get('session-sharing', function(err, settings) {
+	meta.settings.get('firebase-session-sharing', function(err, settings) {
 		if (err) {
 			return callback(err);
 		}
