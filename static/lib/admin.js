@@ -1,12 +1,12 @@
 'use strict';
 /* globals $, app, socket */
 
-define('admin/plugins/session-sharing', ['settings'], function(Settings) {
+define('admin/plugins/firebase-session-sharing', ['settings'], function(Settings) {
 
 	var ACP = {};
 
 	ACP.init = function() {
-		Settings.load('session-sharing', $('.session-sharing-settings'));
+		Settings.load('firebase-session-sharing', $('.session-sharing-settings'));
 
 		$('#save').on('click', function() {
 			Settings.save('session-sharing', $('.session-sharing-settings'), function() {
